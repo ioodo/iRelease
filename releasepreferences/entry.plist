@@ -1,0 +1,10 @@
+{
+    entry = {
+	bundle = ReleasePreferences;
+	cell = PSLinkCell;
+	detail = ReleasePreferencesListController;
+	icon = ReleasePreferences.png;
+	isController = 1;
+	label = iRelease;
+    };
+}

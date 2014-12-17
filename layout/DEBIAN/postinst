@@ -1,0 +1,4 @@
+#!/bin/sh
+	chown mobile:mobile /var/mobile
+	chown mobile:mobile /var/mobile/Library
+exit 0
