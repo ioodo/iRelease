@@ -1,6 +1,6 @@
 #!/bin/bash
 
 if [[ $1 == remove ]]; then
-	rm -rf /var/mobile/Library/iRelease
+	rm -rf /var/mobile/Library/Preferences/com.ioodo.release.plist
 fi
 exit 0

@@ -1,10 +1,12 @@
 Package: com.ioodo.release
-Name: Release
+Name: iRelease
 Pre-Depends: firmware (>= 8.0)
 Depends: mobilesubstrate
-Version: 0.0.1
+Version: 0.0.2
 Architecture: iphoneos-arm
-Description: An awesome MobileSubstrate tweak!
+Description: Quick quit running apps
+Homepage: http://www.ioodo.com
 Maintainer: ioodo <ioododev@gmail.com>
 Author: ioodo <ioododev@gmail.com>
 Section: Tweaks
+Icon: file:///Library/PreferenceBundles/ReleasePreferences.bundle/ReleasePreferences@2x.png

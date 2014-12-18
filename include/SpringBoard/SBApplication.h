@@ -6,4 +6,5 @@
 }
 - (_Bool)isRunning;
 - (void)deactivate;
+- (id)bundleIdentifier;
 @end

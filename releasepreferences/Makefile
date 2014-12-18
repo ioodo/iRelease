@@ -1,7 +1,15 @@
+export ADDITIONAL_CFLAGS += -I../src
+
 include theos/makefiles/common.mk
 
 BUNDLE_NAME = ReleasePreferences
-ReleasePreferences_FILES = ReleasePreferences.mm
+ReleasePreferences_FILES =  \
+				../src/ReleaseSetting.m \
+				ReleasePreferences.mm \
+				ReleaseActionSelectController.mm \
+				ReleaseActionSelectFromLeftController.mm \
+				ReleaseActionSelectFromRightController.mm
+				
 ReleasePreferences_INSTALL_PATH = /Library/PreferenceBundles
 ReleasePreferences_FRAMEWORKS = UIKit
 ReleasePreferences_PRIVATE_FRAMEWORKS = Preferences

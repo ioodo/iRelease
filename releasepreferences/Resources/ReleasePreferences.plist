@@ -7,23 +7,101 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>ReleasePreferences First Page</string>
+			<key>footerText</key>
+			<string>LongPress StatusBar left or right side will trigger actions</string>
+			<key>isStaticText</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>
-			<true/>
-			<key>defaults</key>
-			<string>com.ioodo.releasepreferences</string>
-			<key>key</key>
-			<string>AwesomeSwitch1</string>
+			<false/>
 			<key>label</key>
-			<string>Awesome Switch 1</string>
+			<string>Enabled</string>
+			<key>set</key>
+			<string>setEnabled:specifier:</string>
+			<key>get</key>
+			<string>getEnabled:</string>
+		</dict>
+		<dict>
+      <key>cell</key>
+      <string>PSLinkListCell</string>
+      <key>detail</key>
+      <string>ReleaseActionSelectFromLeftController</string>
+      <key>label</key>
+      <string>Left Side Actions(StatusBar)</string>
+      <key>validTitles</key>
+      <array>
+      	<string>None</string>
+        <string>Go Home</string>
+        <string>Quit Top App</string>
+        <string>Quit All Apps</string>
+      </array>
+      <key>validValues</key>
+      <array>
+      	<string>0</string>
+        <string>1</string>
+        <string>2</string>
+        <string>3</string>
+      </array>
+    </dict>
+		<dict>
+      <key>cell</key>
+      <string>PSLinkListCell</string>
+      <key>detail</key>
+      <string>ReleaseActionSelectFromRightController</string>
+      <key>label</key>
+      <string>Right Side Actions(StatusBar)</string>
+      <key>validTitles</key>
+      <array>
+      	<string>None</string>
+        <string>Go Home</string>
+        <string>Quit Top App</string>
+        <string>Quit All Apps</string>
+      </array>
+      <key>validValues</key>
+      <array>
+      	<string>4</string>
+        <string>5</string>
+        <string>6</string>
+        <string>7</string>
+      </array>
+    </dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>iRelease 0.0.2</string>
+			<key>isStaticText</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>feedBack</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Feed Back by Email</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>visitWebSite</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Visit ioodo.com</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Open Source on GitHub</string>
+			<key>isStaticText</key>
+			<true/>
 		</dict>
 	</array>
 	<key>title</key>
-	<string>iRelease Preferences</string>
+	<string>iRelease</string>
 </dict>
 </plist>

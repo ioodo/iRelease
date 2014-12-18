@@ -9,146 +9,50 @@
 #import "SBApplication.h"
 #import "SpringBoard.h"
 #import "define.h"
-
-/*
-static UIWindow *__global_swc_window = nil;
-static UIViewController *__global_swc_controller = nil;
-
-
-%hook SpringBoard
-
-%new(v)
-- (void)_notifyPop_safewechat
-{
-    if (__global_swc_window)
-    {
-        [__global_swc_window release];
-        __global_swc_window = nil;
-    }
-    
-    if (__global_swc_controller)
-    {
-        [__global_swc_controller release];
-        __global_swc_controller = nil;
-    }
-}
-
-%end
-*/
-
-/*
-static void callRelease(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
-{			
-  	
-  	SpringBoard *sb = (SpringBoard *)[objc_getClass("SpringBoard") sharedApplication];
-  	id top = [sb _accessibilityTopDisplay];
-  	if (top != nil)
-  	{
-  		SBUIController *uiCon = (SBUIController *)[objc_getClass("SBUIController") sharedInstance];
-  		[uiCon clickedMenuButton];
-  	}
-  	
-		
-		SBAppSwitcherModel *switcherModel = (SBAppSwitcherModel *)[objc_getClass("SBAppSwitcherModel") sharedInstance];
-		NSMutableArray *layouts = MSHookIvar<NSMutableArray *>(switcherModel, "_recentDisplayLayouts");
-		for (int i = [layouts count]-1; i >= 0; i--)
-		{
-			SBDisplayLayout *layout = [layouts objectAtIndex:i];
-			
-			
-			NSString *bundleIdentifier = nil;
-			NSArray *items = [layout displayItems];
-
-			if (items != nil && [items count] > 0) {
-				SBDisplayItem *item = (SBDisplayItem *)[items objectAtIndex:0];
-				bundleIdentifier = [item displayIdentifier];
-			}
-			
-			if (bundleIdentifier == nil)
-				continue;
-			
-			
-			SBApplicationController *appCon = (SBApplicationController *)[objc_getClass("SBApplicationController") sharedInstance];
-			SBApplication *app = [appCon applicationWithBundleIdentifier:bundleIdentifier];
-			
-			if ([app isRunning])
-			{
-				[app deactivate];
-			
-				FBApplicationProcess *_process = MSHookIvar<FBApplicationProcess *>(app, "_process");
-				[_process _queue_processDidExit];
-			}
-			
-			//NSLog(@"-----layout:%@", NSStringFromClass([layout class]));
-			[switcherModel remove:layout];
-		}
-		
-
-		SpringBoard *sb = (SpringBoard *)[objc_getClass("SpringBoard") sharedApplication];
-
-		[sb _notifyPop_safewechat];
-		
-    __global_swc_window = [[SWcWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    __global_swc_window.windowLevel = INT_MAX;//INT_MAX;
-    
-    WcAccountsViewController *controller = [[WcAccountsViewController alloc] init];
-    controller.delegate = sb;
-    __global_swc_controller = [[UINavigationController alloc] initWithRootViewController:controller];
-    [controller release];
-    
-    [__global_swc_window addSubview:__global_swc_controller.view];
-
-}
-*/
+#import "ReleaseSetting.h"
 
 static void callRelease(ReleaseOrientation orientation)
-{			
-  	//killall backgrounds
+{		
+		ReleaseSetting *setting = [[ReleaseSetting alloc] init];
+		
+		BOOL releaseEnabled = [setting boolForKey:kReleaseEnable];
+		NSUInteger action = ReleaseActionNone;
+		
+		if (orientation == ReleaseOrientationLeft)
+				action = [setting intForKey:kLeftSideAction];
+		else
+				action = [setting intForKey:kRightSideAction];
+		
+		[setting release];
+		
+		if (!releaseEnabled)
+				return;
+		
+		if (action == ReleaseActionNone)
+				return;
+  	
+  	NSUInteger quitAllAction = action & ReleaseActionQuitAllApp;
+  	NSUInteger quitTopAppAction = action & ReleaseActionQuitTopApp;
   	
   	SpringBoard *sb = (SpringBoard *)[objc_getClass("SpringBoard") sharedApplication];
-  	id top = [sb _accessibilityTopDisplay];
-  	if (top != nil)
-  	{
+  	SBUIController *uiCon = (SBUIController *)[objc_getClass("SBUIController") sharedInstance];
+  	
+  	SBApplication *topApp = [sb _accessibilityTopDisplay];
+  	
+  	if (topApp != nil)
+  	{  		
   		//return to SpringBoard
-  		SBUIController *uiCon = (SBUIController *)[objc_getClass("SBUIController") sharedInstance];
   		[uiCon clickedMenuButton];
+  		
+			if (quitAllAction == 0 && quitTopAppAction != 0)
+			{
+					[uiCon iReleaseQuitRunningApp:[topApp bundleIdentifier]];
+			}
+			
   	}
   	
-		
-		SBAppSwitcherModel *switcherModel = (SBAppSwitcherModel *)[objc_getClass("SBAppSwitcherModel") sharedInstance];
-		NSMutableArray *layouts = MSHookIvar<NSMutableArray *>(switcherModel, "_recentDisplayLayouts");
-		for (int i = [layouts count]-1; i >= 0; i--)
-		{
-			SBDisplayLayout *layout = [layouts objectAtIndex:i];
-			
-			
-			NSString *bundleIdentifier = nil;
-			NSArray *items = [layout displayItems];
-
-			if (items != nil && [items count] > 0) {
-				SBDisplayItem *item = (SBDisplayItem *)[items objectAtIndex:0];
-				bundleIdentifier = [item displayIdentifier];
-			}
-			
-			if (bundleIdentifier == nil)
-				continue;
-			
-			//kill app process
-			SBApplicationController *appCon = (SBApplicationController *)[objc_getClass("SBApplicationController") sharedInstance];
-			SBApplication *app = [appCon applicationWithBundleIdentifier:bundleIdentifier];
-			
-			if ([app isRunning])
-			{
-				[app deactivate];
-			
-				FBApplicationProcess *_process = MSHookIvar<FBApplicationProcess *>(app, "_process");
-				[_process _queue_processDidExit];
-			}
-			
-			//remove from switcher
-			[switcherModel remove:layout];
-		}
-
+  	if (quitAllAction != 0)
+  		[uiCon iReleaseQuitRunningApps];
 }
 	
 static void callRelease_0(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
@@ -173,11 +77,101 @@ static fun_ptr_t GetFuncPointer(const char* sfuncname)
     return NULL;                                                                                                  
 }
 
+%group HookSB
+
+%hook SBUIController
+
+%new(v)
+- (void) iReleaseQuitRunningApps
+{
+		SBAppSwitcherModel *switcherModel = (SBAppSwitcherModel *)[objc_getClass("SBAppSwitcherModel") sharedInstance];
+		
+		NSMutableArray *layouts = MSHookIvar<NSMutableArray *>(switcherModel, "_recentDisplayLayouts");
+		for (int i = [layouts count]-1; i >= 0; i--)
+		{
+			SBDisplayLayout *layout = [layouts objectAtIndex:i];
+			
+			
+			NSString *bundleIdentifier = nil;
+			NSArray *items = [layout displayItems];
+
+			if (items != nil && [items count] > 0) {
+				SBDisplayItem *item = (SBDisplayItem *)[items objectAtIndex:0];
+				bundleIdentifier = [item displayIdentifier];
+			}
+			
+			if (bundleIdentifier == nil)
+				continue;
+			
+			[self iReleaseKillRunningApp:bundleIdentifier];
+			
+			//remove from switcher
+			[switcherModel remove:layout];
+		}
+}
+
+%new(v@)
+- (void) iReleaseQuitRunningApp:(NSString *)bundleIdentifier
+{
+		SBAppSwitcherModel *switcherModel = (SBAppSwitcherModel *)[objc_getClass("SBAppSwitcherModel") sharedInstance];
+		
+		SBDisplayLayout *layout = nil;
+		
+		NSMutableArray *layouts = MSHookIvar<NSMutableArray *>(switcherModel, "_recentDisplayLayouts");
+		for (int i = [layouts count]-1; i >= 0; i--)
+		{
+			SBDisplayLayout *_layout = [layouts objectAtIndex:i];
+			
+			NSString *_bundleIdentifier = nil;
+			NSArray *items = [_layout displayItems];
+
+			if (items != nil && [items count] > 0) {
+				SBDisplayItem *item = (SBDisplayItem *)[items objectAtIndex:0];
+				_bundleIdentifier = [item displayIdentifier];
+			}
+			
+			if (_bundleIdentifier == nil)
+				continue;
+				
+			if ([bundleIdentifier isEqualToString:_bundleIdentifier])
+			{
+					layout = _layout;
+					break;
+			}
+		}
+		
+		[self iReleaseKillRunningApp:bundleIdentifier];
+		
+		//remove from switcher
+		if (layout)
+				[switcherModel remove:layout];				
+}
+
+%new(v@)
+- (void) iReleaseKillRunningApp:(NSString *)bundleIdentifier
+{
+		SBApplicationController *appCon = (SBApplicationController *)[objc_getClass("SBApplicationController") sharedInstance];
+		SBApplication *app = [appCon applicationWithBundleIdentifier:bundleIdentifier];
+			
+		if ([app isRunning])
+		{
+				[app deactivate];
+			
+				FBApplicationProcess *_process = MSHookIvar<FBApplicationProcess *>(app, "_process");
+				[_process _queue_processDidExit];
+		}
+}
+
+%end
+
+%end
+
 void initHookSpringBoard()
 {
-	//if (![[NSFileManager defaultManager] fileExistsAtPath:kSettingPath ])
-		//	[[NSFileManager defaultManager] createDirectoryAtPath:kSettingPath withIntermediateDirectories:YES attributes:nil error:nil];
-	
+
+	ReleaseSetting *setting = [[ReleaseSetting alloc] init];
+	[setting release];
+		
 	int releaseOrientations[2]={ ReleaseOrientationLeft, ReleaseOrientationRight };
 	for (int i = 0; i < 2; i++)
 	{
@@ -189,5 +183,8 @@ void initHookSpringBoard()
 			if (ptr != NULL)
 					CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, 
 							ptr, (CFStringRef)serverName, NULL, CFNotificationSuspensionBehaviorCoalesce);		
+							
 	}
+	
+	%init(HookSB);
 }
