@@ -2,7 +2,7 @@ Package: com.ioodo.release
 Name: iRelease
 Pre-Depends: firmware (>= 8.0)
 Depends: mobilesubstrate
-Version: 0.0.2
+Version: 0.0.3
 Architecture: iphoneos-arm
 Description: Quick quit running apps
 Homepage: http://www.ioodo.com

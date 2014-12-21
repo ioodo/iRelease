@@ -10,6 +10,8 @@
 #import "SpringBoard.h"
 #import "define.h"
 #import "ReleaseSetting.h"
+#import "ReleaseActivator.h"
+
 
 static void callRelease(ReleaseOrientation orientation)
 {		
@@ -166,6 +168,24 @@ static fun_ptr_t GetFuncPointer(const char* sfuncname)
 
 %end
 
+
+static void regLA()
+{
+	dlopen("/usr/lib/libactivator.dylib", RTLD_LAZY);
+
+	Class laCls = objc_getClass("LAActivator");
+	if (!laCls)
+		return;
+	
+	id la = [laCls sharedInstance];
+	[la registerListener:[[ReleaseActivator alloc] initWithAction:ReleaseActionGoHome] 
+			forName:[NSString stringWithFormat:@"%@.home", kPkgID]];
+	[la registerListener:[[ReleaseActivator alloc] initWithAction:ReleaseActionQuitTopApp] 
+			forName:[NSString stringWithFormat:@"%@.quittop", kPkgID]];
+	[la registerListener:[[ReleaseActivator alloc] initWithAction:ReleaseActionQuitAllApp] 
+			forName:[NSString stringWithFormat:@"%@.quitall", kPkgID]];
+}
+
 void initHookSpringBoard()
 {
 
@@ -187,4 +207,5 @@ void initHookSpringBoard()
 	}
 	
 	%init(HookSB);
+	regLA();
 }

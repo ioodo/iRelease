@@ -4,7 +4,7 @@ export SYSROOT=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.pla
 export TARGET=iphone:clang::8.0
 export ARCHS = armv7 armv7s arm64
 
-THEOS_DEVICE_IP = 192.168.1.101
+THEOS_DEVICE_IP = 192.168.1.100
 SUBPROJECTS = tweak ReleasePreferences
 
 export ADDITIONAL_LDFLAGS += -lsqlite3 -lMobileGestalt

@@ -8,6 +8,14 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
+			<string>Switch off "Enabled" if you would like to use Activator</string>
+			<key>isStaticText</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
 			<string>LongPress StatusBar left or right side will trigger actions</string>
 			<key>isStaticText</key>
 			<true/>
@@ -72,7 +80,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>iRelease 0.0.2</string>
+			<string>iRelease 0.0.3</string>
 			<key>isStaticText</key>
 			<true/>
 		</dict>

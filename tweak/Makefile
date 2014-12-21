@@ -4,6 +4,7 @@ export ADDITIONAL_CFLAGS += -I../include -I../include/SpringBoard -I../include/F
 TWEAK_NAME = Release
 Release_FILES = \
 	../src/ReleaseSetting.m \
+	../src/ReleaseActivator.m \
 	SpringBoardHooks.xm \
 	UIStatusBarHooks.xm \
 	main.mm

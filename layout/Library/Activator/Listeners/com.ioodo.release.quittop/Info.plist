@@ -1,0 +1,6 @@
+{
+    group = "iRelease";
+    title = "Quit Top App";
+    description = " ";
+    "compatible-modes" = ("application");
+}
