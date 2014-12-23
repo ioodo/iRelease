@@ -52,4 +52,19 @@
     [setting write];
     [setting release];
 }
+
+- (id)getActionTip:(PSSpecifier*)specifier
+{
+    ReleaseSetting *setting = [[ReleaseSetting alloc] init];
+    NSString *tip = [setting stringForKey:kActionTip];
+    [setting release];
+    return tip;
+}
+
+-(void) setActionTip:(id)value specifier:(PSSpecifier*)specifier {
+    ReleaseSetting *setting = [[ReleaseSetting alloc] init];
+    [setting setObject:value forKey:kActionTip];
+    [setting write];
+    [setting release];
+}
 @end

@@ -13,7 +13,8 @@ Release_FRAMEWORKS = \
 		UIKit \
 		QuartzCore \
 		Foundation \
-		CoreGraphics
+		CoreGraphics \
+		AudioToolbox
 
 export THEOS_PATH=/opt/theos/
 include ${THEOS_PATH}/makefiles/common.mk

@@ -12,3 +12,7 @@ com.ioodo.release_0.0.2-1_iphoneos-arm.deb
 .theos/packages/com.ioodo.release-0.0.3
 
 com.ioodo.release_0.0.3-2_iphoneos-arm.deb
+
+.theos/packages/com.ioodo.release-0.0.4
+
+com.ioodo.release_0.0.4-2_iphoneos-arm.deb

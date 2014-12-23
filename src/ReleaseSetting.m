@@ -44,9 +44,9 @@
     
     dict = [ [ NSMutableDictionary alloc ] initWithDictionary:_dict];
     
-    if (_isCreate) {
+//    if (_isCreate) {
         [self applyDefaults];
-    }
+//    }
 }
 
 - (id) init
@@ -67,6 +67,7 @@
 	[self applyDefault:kReleaseEnable andValue: (id)kCFBooleanFalse];
 	[self applyDefault:kLeftSideAction andValueInt: ReleaseActionNone];
 	[self applyDefault:kRightSideAction andValueInt: ReleaseActionNone];
+	[self applyDefault:kActionTip andValueInt:ReleaseActionTipStatusBarAnimation];
 
 	[self write];
 }

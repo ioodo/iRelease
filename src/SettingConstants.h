@@ -8,10 +8,17 @@ typedef enum ReleaseAction : NSUInteger {
     ReleaseActionQuitAllApp   = 1 << 2,
 } ReleaseAction;
 
+typedef enum {
+    ReleaseActionTipNone = 0,
+    ReleaseActionTipVibrate,
+    ReleaseActionTipStatusBarAnimation
+} ReleaseActionTip;
+
 #define kPlistFile            @"/var/mobile/Library/Preferences/com.ioodo.release.plist"
 
 #define kReleaseEnable        @"enabled"
 #define kLeftSideAction       @"lsa"
 #define kRightSideAction      @"rsa"
+#define kActionTip            @"actionTip"
 
 #endif /*SETTING_CONSTANTS_H_*/

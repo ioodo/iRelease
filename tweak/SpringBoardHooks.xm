@@ -1,5 +1,6 @@
 #include <substrate.h>
 #include <objc/runtime.h>
+#import <AudioToolBox/AudioToolbox.h>
 #import "FBApplicationProcess.h"
 #import "SBUIController.h"
 #import "SBAppSwitcherModel.h"
@@ -8,6 +9,7 @@
 #import "SBApplicationController.h"
 #import "SBApplication.h"
 #import "SpringBoard.h"
+#import "SBAppStatusBarManager.h"
 #import "define.h"
 #import "ReleaseSetting.h"
 #import "ReleaseActivator.h"
@@ -79,13 +81,22 @@ static fun_ptr_t GetFuncPointer(const char* sfuncname)
     return NULL;                                                                                                  
 }
 
+
 %group HookSB
 
 %hook SBUIController
 
+%new(v) 
+- (void)iReleaseStatusBarAnimationStop
+{
+   	SBAppStatusBarManager *statusBarMgr = (SBAppStatusBarManager *)[objc_getClass("SBAppStatusBarManager") sharedInstance];
+   	[statusBarMgr showStatusBar];
+}
+
 %new(v)
 - (void) iReleaseQuitRunningApps
 {
+
 		SBAppSwitcherModel *switcherModel = (SBAppSwitcherModel *)[objc_getClass("SBAppSwitcherModel") sharedInstance];
 		
 		NSMutableArray *layouts = MSHookIvar<NSMutableArray *>(switcherModel, "_recentDisplayLayouts");
@@ -110,6 +121,33 @@ static fun_ptr_t GetFuncPointer(const char* sfuncname)
 			//remove from switcher
 			[switcherModel remove:layout];
 		}
+		
+		ReleaseSetting *setting = [[ReleaseSetting alloc] init];
+		int actionTip = [setting intForKey:kActionTip];
+		[setting release];
+		
+		switch (actionTip)
+		{
+				case ReleaseActionTipVibrate:
+						AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+						break;
+				case ReleaseActionTipStatusBarAnimation:
+				{
+						SBAppStatusBarManager *statusBarMgr = (SBAppStatusBarManager *)[objc_getClass("SBAppStatusBarManager") sharedInstance];
+						if (statusBarMgr && ![statusBarMgr isStatusBarHidden])
+						{
+						
+				   		[UIView beginAnimations:nil context:nil];
+				    	[UIView setAnimationDelegate:self];
+				    	[UIView setAnimationDidStopSelector:@selector(iReleaseStatusBarAnimationStop)];
+				    	[UIView setAnimationDuration:0.5f];
+				    	[statusBarMgr hideStatusBar];
+				    	[UIView commitAnimations];
+				    }
+						break;
+				}
+		}
+		
 }
 
 %new(v@)

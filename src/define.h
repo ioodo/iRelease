@@ -11,4 +11,6 @@ typedef enum {
     ReleaseOrientationBoth
 } ReleaseOrientation;
 
+#define kVersionNumber 3
+
 #endif
